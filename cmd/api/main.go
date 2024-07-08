@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"todo/config"
-	"todo/db"
-	"todo/internal/server"
+	"todo/internal/infrastructure/db"
+	"todo/internal/infrastructure/server"
 
 	"github.com/sirupsen/logrus"
 )
@@ -14,13 +14,13 @@ func main() {
 
 	log.Println("Load env...")
 	config := config.GetConfig()
-	log.Println("Load env successfully!!")
 
 	log.Println("Connect to DB...")
-	db := db.GetPostgresInstance(config, false)
-	log.Println("Connect to DB successfully")
+	dbInstance := db.GetPostgresInstance(config, false)
 
-	server := server.NewServer(config, db, logrus.New(), nil)
+	defer db.ShutdownDBConnection(dbInstance)
+
+	server := server.NewServer(config, dbInstance, logrus.New(), nil)
 	if err := server.Bootstrap(); err != nil {
 		log.Fatal(err)
 	}

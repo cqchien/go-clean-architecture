@@ -32,6 +32,20 @@ func GetPostgresInstance(config *config.Configuration, migration bool) *gorm.DB 
 	return db
 }
 
+func ShutdownDBConnection(dbInstance *gorm.DB) {
+	sqlDB, err := dbInstance.DB()
+
+	if err != nil {
+		log.Fatal("Failed to obtain database object:", err)
+		return
+	}
+
+	err = sqlDB.Close()
+	if err != nil {
+		log.Fatal("Got error when closing the DB connection:", err)
+	}
+}
+
 func getDbConnectionString(config *config.Configuration) string {
 	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d",
 		config.DbHost, config.DbUser, config.DbPassword, config.DbName, config.DbPort)
