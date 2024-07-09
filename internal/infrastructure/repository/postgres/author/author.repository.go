@@ -16,15 +16,15 @@ func NewAuthorRepository(db *gorm.DB) *authorRepository {
 	return &authorRepository{db: db}
 }
 
-func (authorRepo *authorRepository) GetById(ctx context.Context, id int64) (author domainAuthor.Author, err error) {
+func (authorRepo *authorRepository) GetById(ctx context.Context, id int64) (author *domainAuthor.Author, err error) {
 	var authorRes domainAuthor.Author
 	errQueryAuthor := authorRepo.db.WithContext(ctx).Where(&domainAuthor.Author{
 		ID: id,
 	}).First(&authorRes).Error
 
-	// if errQueryAuthor != nil {
-	// 	return nil, err
-	// }
+	if errQueryAuthor != nil {
+		return nil, errQueryAuthor
+	}
 
-	return authorRes, errQueryAuthor
+	return &authorRes, errQueryAuthor
 }

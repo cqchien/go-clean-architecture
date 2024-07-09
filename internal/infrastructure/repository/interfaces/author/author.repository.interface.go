@@ -6,5 +6,5 @@ import (
 )
 
 type AuthorRepository interface {
-	GetById(ctx context.Context, id int64) (author domainAuthor.Author, err error)
+	GetById(ctx context.Context, id int64) (author *domainAuthor.Author, err error)
 }
