@@ -1,11 +1,11 @@
-package author
+package repository
 
 import (
 	"context"
 
 	"gorm.io/gorm"
 
-	domainAuthor "todo/internal/author/domain"
+	domainAuthor "todo/internal/domain/author"
 )
 
 type authorRepository struct {

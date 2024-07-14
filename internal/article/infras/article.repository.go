@@ -1,8 +1,9 @@
-package article
+package repository
 
 import (
 	"context"
-	articleDomain "todo/internal/article/domain"
+	articleDomain "todo/internal/domain/article"
+	articleInterfaces "todo/internal/interfaces/article"
 
 	"gorm.io/gorm"
 )
@@ -11,17 +12,17 @@ type articleRepository struct {
 	db *gorm.DB
 }
 
-func NewArticleRepository(db *gorm.DB) *articleRepository {
+func NewArticleRepository(db *gorm.DB) articleInterfaces.ArticleRepository {
 	return &articleRepository{db: db}
 }
 
-func (articleRepo *articleRepository) GetAll(ctx context.Context, page int64, limit int64) (articles []*articleDomain.Article, total int64, err error) {
+func (articleRepo *articleRepository) GetAll(ctx context.Context, page int, limit int) (articles []*articleDomain.Article, total int64, err error) {
 	var articlesResponse []*articleDomain.Article
 	var totalArticles int64
 
 	offset := (page - 1) * limit
 
-	errQueryArticles := articleRepo.db.WithContext(ctx).Offset(int(offset)).Limit(int(limit)).Find(&articlesResponse).Error
+	errQueryArticles := articleRepo.db.WithContext(ctx).Offset(offset).Limit(limit).Find(&articlesResponse).Error
 
 	if errQueryArticles != nil {
 		return nil, 0, errQueryArticles

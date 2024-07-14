@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"todo/config"
-	"todo/internal/infrastructure/db"
-	"todo/internal/infrastructure/server"
+	driverDB "todo/internal/driver/db"
+	driverServer "todo/internal/driver/server"
 
 	"github.com/sirupsen/logrus"
 )
@@ -16,11 +16,11 @@ func main() {
 	config := config.GetConfig()
 
 	log.Println("Connect to DB...")
-	dbInstance := db.GetPostgresInstance(config, false)
+	dbInstance := driverDB.GetPostgresInstance(config, false)
 
-	defer db.ShutdownDBConnection(dbInstance)
+	defer driverDB.ShutdownDBConnection(dbInstance)
 
-	server := server.NewServer(config, dbInstance, logrus.New(), nil)
+	server := driverServer.NewServer(config, dbInstance, logrus.New(), nil)
 	if err := server.Bootstrap(); err != nil {
 		log.Fatal(err)
 	}

@@ -1,4 +1,4 @@
-package db
+package driverDB
 
 import (
 	"fmt"
