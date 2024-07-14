@@ -40,6 +40,11 @@ func (server *Server) Bootstrap() error {
 		}
 	}()
 
+	if loadRouteErr := server.MapRoutes(server.echo); loadRouteErr != nil {
+		server.logger.Fatalln("Error loading routes: ", loadRouteErr)
+		return loadRouteErr
+	}
+
 	if server.ready != nil {
 		server.ready <- true
 	}
