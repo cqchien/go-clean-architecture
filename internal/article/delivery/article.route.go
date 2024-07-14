@@ -7,5 +7,5 @@ import (
 )
 
 func ArticleRoutes(group *echo.Group, articleHandler articleInterfaces.ArticleHandlerInterface) {
-	group.GET("/", articleHandler.GetAll())
+	group.GET("", articleHandler.GetAll())
 }

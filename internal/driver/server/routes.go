@@ -21,6 +21,7 @@ func (server *Server) MapRoutes(echo *echo.Echo) error {
 
 	// Load middlewares
 	echo.Use(middleware.BodyLimit("2M"))
+	echo.Pre(middleware.RemoveTrailingSlash())
 
 	// Versioning
 	v1 := echo.Group("/api/v1")
