@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	articleDomain "todo/internal/domain/article"
-	articleInterfaces "todo/internal/interfaces/article"
+	articleDomain "todo/internal/article/domain"
+	articleInterfaces "todo/internal/article/interfaces"
 
 	"gorm.io/gorm"
 )
