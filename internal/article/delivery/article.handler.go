@@ -2,11 +2,11 @@ package articleDelivery
 
 import (
 	"net/http"
-	articleDomain "todo/internal/article/domain"
+	"strconv"
 	articleInterfaces "todo/internal/article/interfaces"
+	paginationConstant "todo/internal/constants"
 
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 )
 
 type articleHandler struct {
@@ -17,13 +17,34 @@ func NewArticleHandler(articleService articleInterfaces.ArticleService) articleI
 	return &articleHandler{articleService: articleService}
 }
 
+// ResponseError represent the response error struct
+type ResponseError struct {
+	Message string `json:"message"`
+}
+
+type PaginationData struct {
+	data  any
+	total int64
+}
+
 func (articleHandler *articleHandler) GetAll() echo.HandlerFunc {
 	return func(context echo.Context) error {
-		page := context.QueryParam("page")
-		limit := context.QueryParam("limit")
+		page, errParsePage := strconv.Atoi(context.QueryParam("page"))
+		limit, errParseLimit := strconv.Atoi(context.QueryParam("limit"))
 
-		logrus.Info(page, limit)
-		return context.JSON(http.StatusOK, []articleDomain.Article{})
-		// articlesResponse, totalArticles, errQueryArticles := articleHandler.articleService.GetAll(ctx, page, limit)
+		if errParsePage != nil {
+			page = paginationConstant.PAGE_DEFAULT
+		}
+
+		if errParseLimit != nil {
+			limit = paginationConstant.LIMIT_DEFAULT
+		}
+
+		articlesResponse, totalArticles, errQueryArticles := articleHandler.articleService.GetAll(context.Request().Context(), page, limit)
+
+		if errQueryArticles != nil {
+			return context.JSON(http.StatusInternalServerError, ResponseError{Message: errQueryArticles.Error()})
+		}
+		return context.JSON(http.StatusOK, PaginationData{data: articlesResponse, total: totalArticles})
 	}
 }
