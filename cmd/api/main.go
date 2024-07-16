@@ -16,7 +16,7 @@ func main() {
 	config := config.GetConfig()
 
 	log.Println("Connect to DB...")
-	dbInstance := driverDB.GetPostgresInstance(config, false)
+	dbInstance := driverDB.GetPostgresInstance(config, true)
 
 	defer driverDB.ShutdownDBConnection(dbInstance)
 

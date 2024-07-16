@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"todo/config"
+	"todo/migrations"
 
+	"github.com/go-gormigrate/gormigrate/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -20,9 +22,9 @@ func GetPostgresInstance(config *config.Configuration, migration bool) *gorm.DB 
 	}
 
 	if migration {
-		errorMigrate := db.AutoMigrate()
+		migrate := gormigrate.New(db, gormigrate.DefaultOptions, migrations.Migrations)
 
-		if errorMigrate != nil {
+		if errorMigrate := migrate.Migrate(); errorMigrate != nil {
 			log.Println("Error when run migrations", errorMigrate)
 
 			panic(errorMigrate)
