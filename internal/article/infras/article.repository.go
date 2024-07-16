@@ -22,13 +22,13 @@ func (articleRepo *articleRepository) GetAll(ctx context.Context, page int, limi
 
 	offset := (page - 1) * limit
 
-	errQueryArticles := articleRepo.db.WithContext(ctx).Offset(offset).Limit(limit).Find(&articlesResponse).Error
+	errQueryArticles := articleRepo.db.Model(&articleDomain.Article{}).WithContext(ctx).Offset(offset).Limit(limit).Find(&articlesResponse).Error
 
 	if errQueryArticles != nil {
 		return nil, 0, errQueryArticles
 	}
 
-	errQueryCountArticles := articleRepo.db.WithContext(ctx).Count(&totalArticles).Error
+	errQueryCountArticles := articleRepo.db.WithContext(ctx).Model(&articleDomain.Article{}).Count(&totalArticles).Error
 
 	if errQueryCountArticles != nil {
 		return nil, 0, errQueryCountArticles

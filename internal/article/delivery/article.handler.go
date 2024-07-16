@@ -17,14 +17,15 @@ func NewArticleHandler(articleService articleInterfaces.ArticleService) articleI
 	return &articleHandler{articleService: articleService}
 }
 
-// ResponseError represent the response error struct
+// ResponseError represents the response error struct
 type ResponseError struct {
 	Message string `json:"message"`
 }
 
+// PaginationData represents paginated data response
 type PaginationData struct {
-	data  any
-	total int64
+	Data  any   `json:"data"`
+	Total int64 `json:"total"`
 }
 
 func (articleHandler *articleHandler) GetAll() echo.HandlerFunc {
@@ -45,6 +46,6 @@ func (articleHandler *articleHandler) GetAll() echo.HandlerFunc {
 		if errQueryArticles != nil {
 			return context.JSON(http.StatusInternalServerError, ResponseError{Message: errQueryArticles.Error()})
 		}
-		return context.JSON(http.StatusOK, PaginationData{data: articlesResponse, total: totalArticles})
+		return context.JSON(http.StatusOK, PaginationData{Data: articlesResponse, Total: totalArticles})
 	}
 }

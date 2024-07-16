@@ -9,6 +9,7 @@ import (
 	"github.com/go-gormigrate/gormigrate/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func GetPostgresInstance(config *config.Configuration, migration bool) *gorm.DB {
@@ -30,6 +31,8 @@ func GetPostgresInstance(config *config.Configuration, migration bool) *gorm.DB 
 			panic(errorMigrate)
 		}
 	}
+
+	db = db.Session(&gorm.Session{Logger: logger.Default.LogMode(logger.Info)})
 
 	return db
 }
