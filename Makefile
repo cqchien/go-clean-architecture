@@ -21,7 +21,7 @@ build:
 	go build ./cmd/api/main.go
 
 create-migrate:
-	@cp migrations/migration_template.go $(MIGRATION_FILE)
+	@cp migrations/migration.template.txt $(MIGRATION_FILE)
 	@sed -i '' "s/TIMESTAMP_DESCRIPTION/$(TIMESTAMP)_$(MIGRATION_NAME)/g" $(MIGRATION_FILE)
 	@echo "Created migration $(MIGRATION_FILE)"
 
